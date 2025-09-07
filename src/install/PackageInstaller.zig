@@ -983,7 +983,9 @@ pub const PackageInstaller = struct {
         this.summary.skipped += @intFromBool(!needs_install);
 
         if (needs_install) {
-            if (!remove_patch and resolution.tag.canEnqueueInstallTask() and installer.packageMissingFromCache(this.manager, package_id, resolution.tag)) {
+            const should_download_package = !this.options.offline and !remove_patch and resolution.tag.canEnqueueInstallTask() and installer.packageMissingFromCache(this.manager, package_id, resolution.tag);
+
+            if (should_download_package) {
                 if (comptime Environment.allow_assert) {
                     bun.assertWithLocation(resolution.canEnqueueInstallTask(), @src());
                 }

@@ -14,6 +14,7 @@ scope: Npm.Registry.Scope = undefined,
 
 registries: Npm.Registry.Map = .{},
 cache_directory: string = "",
+offline: bool = false,
 enable: Enable = .{},
 do: Do = .{},
 positionals: []const string = &[_]string{},
@@ -436,6 +437,8 @@ pub fn load(
         if (cli.token.len > 0) {
             this.scope.token = cli.token;
         }
+
+        if (cli.offline) this.offline = cli.offline;
 
         if (cli.no_save) {
             this.do.save_lockfile = false;

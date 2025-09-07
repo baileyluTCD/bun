@@ -46,6 +46,7 @@ const shared_params = [_]ParamType{
     clap.parseParam("--network-concurrency <NUM>           Maximum number of concurrent network requests (default 48)") catch unreachable,
     clap.parseParam("--save-text-lockfile                  Save a text-based lockfile") catch unreachable,
     clap.parseParam("--omit <dev|optional|peer>...         Exclude 'dev', 'optional', or 'peer' dependencies from install") catch unreachable,
+    clap.parseParam("-o, --offline                         Attempt to install packages from the local cache only without making a network request") catch unreachable,
     clap.parseParam("--lockfile-only                       Generate a lockfile without installing dependencies") catch unreachable,
     clap.parseParam("-h, --help                            Print this help menu") catch unreachable,
 };
@@ -171,6 +172,7 @@ trusted: bool = false,
 no_summary: bool = false,
 latest: bool = false,
 json_output: bool = false,
+offline: bool = false,
 filters: []const string = &.{},
 
 pack_destination: string = "",
@@ -666,6 +668,7 @@ pub fn parse(allocator: std.mem.Allocator, comptime subcommand: Subcommand) !Com
     cli.trusted = args.flag("--trust");
     cli.no_summary = args.flag("--no-summary");
     cli.ca = args.options("--ca");
+    cli.offline = args.flag("--offline");
     cli.lockfile_only = args.flag("--lockfile-only");
 
     if (args.option("--cache-dir")) |cache_dir| {
